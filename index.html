@@ -3,170 +3,239 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Only for My Queen ❤️</title>
+    <title>My Heart's Director: A Story for My Queen ❤️</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pyidaungsu&display=swap');
         
         body, html { margin: 0; padding: 0; font-family: 'Pyidaungsu', sans-serif; background: #000; color: white; overflow: hidden; height: 100vh; }
 
-        /* Lock Screen with Animation */
-        #lock-screen { position: fixed; width: 100%; height: 100%; background: #0a0000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100; transition: 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
-        .lock-container { text-align: center; animation: fadeIn 2s; }
-        .lock-input { padding: 15px; border-radius: 12px; border: 2px solid #500; background: rgba(255, 77, 77, 0.05); color: #ff4d4d; text-align: center; margin-bottom: 20px; width: 220px; font-size: 1.2rem; outline: none; transition: 0.3s; }
-        .lock-input:focus { border-color: #ff4d4d; box-shadow: 0 0 20px rgba(255, 77, 77, 0.3); }
-        .unlock-btn { padding: 12px 40px; background: #ff4d4d; border: none; border-radius: 50px; color: white; cursor: pointer; font-weight: bold; box-shadow: 0 5px 15px rgba(255, 77, 77, 0.4); }
-        #error-msg { color: #ff9999; margin-top: 15px; font-size: 0.9rem; height: 20px; }
+        /* Video Background */
+        #video-bg { position: fixed; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; z-index: -1; transform: translateX(-50%) translateY(-50%); background-size: cover; }
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: -1; }
+
+        /* Lock Screen */
+        #lock-screen { position: fixed; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100; transition: opacity 1.5s ease-in-out; }
+        .lock-container { text-align: center; background: rgba(0,0,0,0.7); padding: 30px; border-radius: 15px; box-shadow: 0 0 40px rgba(255, 77, 77, 0.2); animation: scaleIn 1s forwards; }
+        .lock-input { padding: 15px; border-radius: 10px; border: 2px solid #ff4d4d; background: transparent; color: #fff; text-align: center; margin-bottom: 20px; width: 250px; font-size: 1.2rem; outline: none; transition: 0.3s; }
+        .lock-input:focus { box-shadow: 0 0 25px rgba(255, 77, 77, 0.6); }
+        .unlock-btn { padding: 12px 40px; background: #ff4d4d; border: none; border-radius: 50px; color: white; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 20px rgba(255, 77, 77, 0.4); }
+        .unlock-btn:hover { background: #ff3333; transform: translateY(-2px); }
+        #error-msg { color: #ff8888; margin-top: 15px; font-size: 0.95rem; height: 20px; }
+        @keyframes scaleIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
         /* Choice Screen */
-        #choice-screen { display: none; position: absolute; width: 100%; height: 100%; flex-direction: column; justify-content: center; align-items: center; background: radial-gradient(circle, #300000 0%, #000 100%); z-index: 20; text-align: center; opacity: 0; transition: 1s; }
-        .choice-btn { padding: 18px 45px; border: 1px solid #ff4d4d; background: transparent; color: white; cursor: pointer; font-size: 1.1rem; border-radius: 50px; transition: 0.4s; margin: 15px; box-shadow: 0 0 20px rgba(255, 77, 77, 0.2); }
+        #choice-screen { display: none; position: absolute; width: 100%; height: 100%; flex-direction: column; justify-content: center; align-items: center; z-index: 20; text-align: center; opacity: 0; transition: opacity 1s ease-in-out; }
+        .choice-btn { padding: 18px 45px; border: 1px solid #ff4d4d; background: rgba(255, 77, 77, 0.1); color: white; cursor: pointer; font-size: 1.1rem; border-radius: 50px; margin: 15px; transition: 0.4s; box-shadow: 0 0 20px rgba(255, 77, 77, 0.2); }
+        .choice-btn:hover { background: #ff4d4d; box-shadow: 0 0 40px #ff4d4d; transform: translateY(-3px); }
 
-        /* Enhanced Card Stack */
-        #gallery-mode { display: none; width: 100%; height: 100vh; align-items: center; justify-content: center; position: relative; opacity: 0; transition: 1s; }
-        .gallery-container { width: 85%; max-width: 340px; height: 460px; position: relative; perspective: 1500px; }
-        .card { position: absolute; width: 100%; height: 100%; background: white; padding: 12px 12px 65px 12px; box-sizing: border-box; border-radius: 15px; box-shadow: 0 25px 50px rgba(0,0,0,0.8); transition: 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0; transform: scale(0.5) rotateY(-20deg) translateY(200px); }
-        .card img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 1px solid #eee; }
-        .card.active { opacity: 1; transform: scale(1) rotateY(0deg) translateY(0); z-index: 10; }
-        .card.exit { opacity: 0; transform: scale(0.8) translateX(300px) rotate(45deg); pointer-events: none; }
-        .card-caption { color: #333; text-align: center; font-weight: bold; margin-top: 18px; font-size: 1.1rem; }
+        /* Animated Photo Gallery */
+        #gallery-mode { display: none; width: 100%; height: 100vh; align-items: center; justify-content: center; position: relative; opacity: 0; transition: opacity 1s ease-in-out; }
+        .photo-frame { position: absolute; width: 80%; max-width: 380px; height: 500px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; box-shadow: 0 25px 60px rgba(0,0,0,0.8); opacity: 0; transform: scale(0.7) rotateY(45deg); transition: all 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55); cursor: pointer; }
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); }
+        .photo-frame.active { opacity: 1; transform: scale(1) rotateY(0deg); z-index: 10; }
+        .photo-frame.leaving { opacity: 0; transform: scale(0.6) rotateY(-45deg) translateX(-300px); }
+        .frame-caption { color: #eee; text-align: center; font-weight: bold; margin-top: 15px; font-size: 1.1rem; text-shadow: 0 0 5px rgba(0,0,0,0.7); }
 
-        /* Floating Hearts */
-        .heart-float { position: fixed; pointer-events: none; z-index: 50; animation: floatUp linear forwards; }
+        /* Text Mode & Grand Finale */
+        #text-mode { display: none; width: 90%; max-width: 600px; padding: 40px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 0, 0, 0.95); border: 2px solid #500; border-radius: 20px; text-align: center; z-index: 30; box-shadow: 0 0 60px rgba(255, 0, 0, 0.2); }
+        #typewriter { font-size: 1.1rem; line-height: 2; color: #ffebeb; text-align: justify; }
+        
+        .magic-box { font-size: 90px; cursor: pointer; animation: heartbeat 1.5s infinite; transition: transform 0.2s; }
+        .magic-box:active { transform: scale(0.9); }
+        
+        #final-reveal { display: none; margin-top: 25px; animation: zoomIn 1s forwards; }
+        .reveal-items { font-size: 100px; text-shadow: 0 0 15px gold; }
+        @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        @keyframes zoomIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* Particle Effects */
+        .particle { position: fixed; pointer-events: none; z-index: 50; animation: floatUp linear forwards; }
         @keyframes floatUp { from { transform: translateY(100vh) scale(0); opacity: 1; } to { transform: translateY(-10vh) scale(1.5); opacity: 0; } }
-
-        /* Text & Gift */
-        #text-mode { display: none; width: 88%; max-width: 550px; padding: 35px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(15, 0, 0, 0.98); border: 2px solid #500; border-radius: 25px; text-align: center; z-index: 30; box-shadow: 0 0 40px #ff4d4d44; }
-        .magic-box { font-size: 85px; cursor: pointer; display: inline-block; transition: 0.5s; }
-        .magic-box:active { transform: scale(0.8); }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        /* Fireworks Canvas */
+        #fireworks-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 60; pointer-events: none; }
     </style>
 </head>
 <body>
 
+<video autoplay muted loop id="video-bg">
+    <source src="videos/bg.mp4" type="video/mp4">
+    </video>
+<div id="overlay"></div>
+
 <audio id="bgMusic" loop><source src="music.mp3.mp3" type="audio/mpeg"></audio>
+<canvas id="fireworks-canvas"></canvas>
 
 <div id="lock-screen">
     <div class="lock-container">
-        <div style="font-size: 50px; margin-bottom: 20px;">🔒</div>
-        <h2 style="color: #ff4d4d; font-weight: 300;">Enter the Secret Code</h2>
-        <input type="password" id="passInput" class="lock-input" placeholder="ရက်စွဲကို ရိုက်ထည့်ပါ..." maxlength="8">
+        <div style="font-size: 60px; margin-bottom: 20px;">🎬</div>
+        <h2 style="color: #ff4d4d; font-weight: 300;">Enter the Secret Code to Start Our Story</h2>
+        <input type="password" id="passInput" class="lock-input" placeholder="မင်းရဲ့ မွေးနေ့ / နှစ်ပတ်လည်..." maxlength="8">
         <br>
-        <button class="unlock-btn" onclick="checkLock()">Unlock</button>
+        <button class="unlock-btn" onclick="checkLock()">Unlock My Love Story</button>
         <div id="error-msg"></div>
     </div>
 </div>
 
 <div id="choice-screen">
-    <h1 style="color: #ff4d4d; font-size: 2.3rem; margin-bottom: 5px; text-shadow: 0 0 15px rgba(255,0,0,0.5);">MY QUEEN ❤️</h1>
-    <p style="opacity: 0.6;">You are my today and all of my tomorrows.</p>
-    <div style="margin-top: 30px;">
-        <button class="choice-btn" onclick="start('gallery')">အမှတ်တရ ပြခန်း</button>
-        <button class="choice-btn" onclick="start('text')">ရင်ဖွင့်စကားများ</button>
+    <h1 style="color: #ff4d4d; font-size: 2.5rem; text-shadow: 0 0 20px rgba(255,0,0,0.7);">WELCOME TO OUR WORLD ❤️</h1>
+    <p style="opacity: 0.7; font-size: 1rem;">Choose your journey, my love.</p>
+    <div style="margin-top: 40px;">
+        <button class="choice-btn" onclick="startFeature('gallery')">✨ အမှတ်တရ ဇာတ်လမ်း ✨</button>
+        <button class="choice-btn" onclick="startFeature('text')">💌 ရင်ဖွင့်စကားများ 💌</button>
     </div>
 </div>
 
-<div id="gallery-mode" onclick="nextCard()">
-    <div class="gallery-container">
-        <div class="card active"><img src="images/1.jpg"><div class="card-caption">ကိုယ့်ရဲ့ နတ်သမီးလေး ❤️</div></div>
-        <div class="card"><img src="images/2.jpg"><div class="card-caption">မြတ်နိုးရသူလေး 🌹</div></div>
-        <div class="card"><img src="images/3.jpg"><div class="card-caption">ကိုယ့်ရဲ့ တစ်ဦးတည်းသော 💖</div></div>
-        <div class="card"><img src="images/4.jpg"><div class="card-caption">ချစ်ခြင်းရဲ့ အစ... ✨</div></div>
-        <div class="card"><img src="images/5.jpg"><div class="card-caption">အဖိုးတန်ဆုံး အမှတ်တရများ 🎞️</div></div>
-        <div class="card"><img src="images/6.jpg"><div class="card-caption">ထာဝရ လက်တွဲဖော် 💍</div></div>
-    </div>
+<div id="gallery-mode" onclick="nextPhoto()">
+    <div class="photo-frame active" id="p1"><img src="images/1.jpg"><div class="frame-caption">ကိုယ့်ရဲ့ အချစ်ဦး ❤️</div></div>
+    <div class="photo-frame" id="p2"><img src="images/2.jpg"><div class="frame-caption">တစ်သက်လုံး လက်တွဲမယ့်သူ 🌹</div></div>
+    <div class="photo-frame" id="p3"><img src="images/3.jpg"><div class="frame-caption">ကိုယ့်ရဲ့ ကမ္ဘာ ✨</div></div>
+    <div class="photo-frame" id="p4"><img src="images/4.jpg"><div class="frame-caption">မင်းအပြုံးတွေက ကိုယ့်ခွန်အား 💖</div></div>
+    <div class="photo-frame" id="p5"><img src="images/5.jpg"><div class="frame-caption">နေ့တိုင်း ထပ်ချစ်နေဦးမယ် 🎞️</div></div>
+    <div class="photo-frame" id="p6"><img src="images/6.jpg"><div class="frame-caption">ထာဝရ အတူတူ 💍</div></div>
 </div>
 
 <div id="text-mode">
-    <div id="typewriter" style="line-height: 2; font-size: 1rem; color: #ffebeb;"></div>
-    <div id="gift-area" style="display: none; margin-top: 25px;">
-        <div class="magic-box" onclick="reveal()">🎁</div>
-        <div id="final" style="display: none;">
-            <div style="font-size: 80px; margin-top: 15px;">💐🧸🌹</div>
-            <p style="color: gold; font-size: 1.3rem; margin-top: 10px;">"မင်းကို အသက်ထက်ပိုချစ်တယ် မိန်းမ"</p>
+    <div id="typewriter"></div>
+    <div id="gift-area" style="display: none; margin-top: 30px;">
+        <div class="magic-box" onclick="revealGrandFinale()">🎁</div>
+        <div id="final-reveal">
+            <div class="reveal-items">💐🧸🌹</div>
+            <p style="color: gold; font-size: 1.5rem; margin-top: 15px; text-shadow: 0 0 10px rgba(255,255,0,0.5);">"မင်းကို အသက်ထက်ပိုပြီး မြတ်နိုးပါတယ် မိန်းမ..."</p>
         </div>
     </div>
 </div>
 
 <script>
     const music = document.getElementById('bgMusic');
-    let current = 0;
-    const cards = document.querySelectorAll('.card');
+    const CORRECT_PASSWORD = "24122005"; // မင်းမွေးနေ့ ဒါမှမဟုတ် နှစ်ပတ်လည်
+    let currentPhotoIndex = 0;
+    const photoFrames = document.querySelectorAll('.photo-frame');
+
+    // Particle Effect
+    function createParticle() {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const symbols = ['❤️', '💖', '✨', '🌟', '🌹', '🌸'];
+        p.innerHTML = symbols[Math.floor(Math.random()*symbols.length)];
+        p.style.left = Math.random() * 100 + 'vw';
+        p.style.top = '100vh';
+        p.style.fontSize = Math.random() * 20 + 15 + 'px';
+        p.style.animationDuration = Math.random() * 4 + 5 + 's';
+        p.style.opacity = Math.random() * 0.7 + 0.3;
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 10000);
+    }
+    setInterval(createParticle, 300);
 
     function checkLock() {
         const input = document.getElementById('passInput').value;
         const error = document.getElementById('error-msg');
         
-        if(input === "24122005") {
+        if(input === CORRECT_PASSWORD) {
             document.getElementById('lock-screen').style.opacity = '0';
-            spawnHearts(30);
             setTimeout(() => {
                 document.getElementById('lock-screen').style.display = 'none';
                 document.getElementById('choice-screen').style.display = 'flex';
                 setTimeout(() => document.getElementById('choice-screen').style.opacity = '1', 100);
-                music.play();
-            }, 1000);
+                music.play().catch(e => console.log("Audio play failed:", e));
+            }, 1500);
         } else {
-            error.innerHTML = "ကိုကို့မွေးနေ့ကို ပြန်စဉ်းစားပါဦး မိန်းမရဲ့... 🥺";
+            error.innerHTML = "ကိုကို့ရဲ့ အမှတ်တရရက်စွဲကို ပြန်စဉ်းစားပါဦး မိန်းမရဲ့... 🥺";
             document.getElementById('passInput').value = "";
         }
     }
 
-    function spawnHearts(num) {
-        for(let i=0; i<num; i++) {
-            setTimeout(() => {
-                const h = document.createElement('div');
-                h.className = 'heart-float';
-                h.innerHTML = '❤️';
-                h.style.left = Math.random() * 100 + 'vw';
-                h.style.fontSize = Math.random() * 20 + 20 + 'px';
-                h.style.animationDuration = Math.random() * 2 + 3 + 's';
-                document.body.appendChild(h);
-                setTimeout(() => h.remove(), 5000);
-            }, i * 100);
-        }
-    }
-    setInterval(() => { if(document.getElementById('choice-screen').style.display === 'flex') spawnHearts(1); }, 600);
-
-    function start(mode) {
+    function startFeature(mode) {
         document.getElementById('choice-screen').style.opacity = '0';
         setTimeout(() => {
             document.getElementById('choice-screen').style.display = 'none';
             if(mode === 'gallery') {
                 document.getElementById('gallery-mode').style.display = 'flex';
+                setTimeout(() => photoFrames[currentPhotoIndex].classList.add('active'), 500);
                 setTimeout(() => document.getElementById('gallery-mode').style.opacity = '1', 100);
             } else {
                 document.getElementById('text-mode').style.display = 'block';
-                type();
+                startTypewriter();
             }
-        }, 800);
+        }, 1000);
     }
 
-    function nextCard() {
-        cards[current].classList.remove('active');
-        cards[current].classList.add('exit');
-        let prev = current;
-        current = (current + 1) % cards.length;
-        cards[current].classList.add('active');
-        setTimeout(() => { cards[prev].classList.remove('exit'); }, 800);
+    function nextPhoto() {
+        photoFrames[currentPhotoIndex].classList.remove('active');
+        photoFrames[currentPhotoIndex].classList.add('leaving');
+        
+        setTimeout(() => {
+            photoFrames[currentPhotoIndex].classList.remove('leaving'); // Reset for next cycle
+            currentPhotoIndex = (currentPhotoIndex + 1) % photoFrames.length;
+            photoFrames[currentPhotoIndex].classList.add('active');
+        }, 800); // Should match CSS transition time
     }
 
-    function type() {
-        const msg = `ချစ်ရပါသော မိန်းမ... ❤️\n\nဒီနေ့ အလုပ်မှာ စိတ်ညစ်ခဲ့သမျှတွေကို ဒီမှာတင် ထားခဲ့လိုက်ပါနော်။ ကိုယ်တို့နှစ်ယောက်ရဲ့ ကမ္ဘာငယ်လေးထဲမှာ မင်းက အမြဲတမ်း အထူးခြားဆုံးပါ။ \n\nမင်းကို ပျော်စေချင်လွန်းလို့ ကိုယ်ကိုယ်တိုင် ဒီ Website လေးကို Code ရေးပြီး ဖန်တီးထားတာပါ။ လက်ဆောင်နောက်ကျသွားတာကို စိတ်မဆိုးပါနဲ့နော်။ မင်းကို အသက်ထက်ပိုပြီး မြတ်နိုးပါတယ်...\n\nဒီမှာ... မင်းအတွက် Surprise...`;
-        let j = 0;
-        function t() {
-            if(j < msg.length) {
-                document.getElementById('typewriter').innerHTML += msg.charAt(j) === '\n' ? '<br>' : msg.charAt(j);
-                j++; setTimeout(t, 60);
+    function startTypewriter() {
+        const fullMessage = `ချစ်ရပါသော မိန်းမ... ❤️\n\nဒီနေ့ အလုပ်မှာ စိတ်ညစ်ခဲ့ရသမျှတွေ ဒီ Website လေးထဲမှာ ထားခဲ့လိုက်ပါတော့နော်။ ကိုယ်တို့နှစ်ယောက်ရဲ့ ဇာတ်လမ်းလေးက အမြဲတမ်း ပျော်ရွှင်စရာတွေနဲ့ ပြည့်နေရမှာပါ။ \n\nမင်းက ကိုယ့်ဘဝရဲ့ ဒါရိုက်တာလိုပါပဲ။ ကိုယ့်ရဲ့ နေ့ရက်တိုင်းကို အဓိပ္ပာယ်ရှိအောင် ဖန်တီးပေးခဲ့သူပါ။ မင်းကို ပျော်အောင်ထားဖို့ ကိုယ်တတ်နိုင်သမျှ အရာအားလုံးကို လုပ်ပေးသွားမှာပါ။ \n\nဒီ Website လေးကို မင်းအတွက် ကိုယ်ကိုယ်တိုင် ရေးထားတာပါ။ လက်ဆောင်နောက်ကျတာကို ခွင့်လွှတ်ပေးပါနော်။ မင်းကို အသက်ထက်ပိုချစ်ပါတယ်...\n\nဒီမှာ... မင်းအတွက် နောက်ဆုံး Surprise...`;
+        let i = 0;
+        const typewriterDiv = document.getElementById('typewriter');
+        function type() {
+            if (i < fullMessage.length) {
+                typewriterDiv.innerHTML += fullMessage.charAt(i) === '\n' ? '<br>' : fullMessage.charAt(i);
+                i++; setTimeout(type, 50); // Typing speed
             } else { document.getElementById('gift-area').style.display = 'block'; }
         }
-        t();
+        type();
     }
 
-    function reveal() {
+    function revealGrandFinale() {
         document.querySelector('.magic-box').style.display = 'none';
-        document.getElementById('final').style.display = 'block';
-        spawnHearts(50);
+        document.getElementById('final-reveal').style.display = 'block';
+        initFireworks(); // Start fireworks!
+    }
+
+    // Fireworks Logic (using canvas)
+    const fireworksCanvas = document.getElementById('fireworks-canvas');
+    const f_ctx = fireworksCanvas.getContext('2d');
+    let particles = [];
+
+    function initFireworks() {
+        fireworksCanvas.width = window.innerWidth;
+        fireworksCanvas.height = window.innerHeight;
+        
+        function createFirework(x, y) {
+            for (let i = 0; i < 100; i++) {
+                particles.push({
+                    x: x, y: y,
+                    vx: (Math.random() - 0.5) * 15,
+                    vy: (Math.random() - 0.5) * 15,
+                    alpha: 1,
+                    color: `hsl(${Math.random() * 360}, 100%, 70%)`,
+                    gravity: 0.3
+                });
+            }
+        }
+
+        // Spawn a few fireworks for grand finale
+        createFirework(fireworksCanvas.width / 2, fireworksCanvas.height / 2);
+        setTimeout(() => createFirework(Math.random() * fireworksCanvas.width, Math.random() * fireworksCanvas.height), 500);
+        setTimeout(() => createFirework(Math.random() * fireworksCanvas.width, Math.random() * fireworksCanvas.height), 1000);
+
+        function animateFireworks() {
+            f_ctx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+            particles.forEach((p, i) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += p.gravity; // Apply gravity
+                p.alpha -= 0.015;
+                f_ctx.globalAlpha = p.alpha;
+                f_ctx.fillStyle = p.color;
+                f_ctx.beginPath();
+                f_ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+                f_ctx.fill();
+                if (p.alpha <= 0) particles.splice(i, 1);
+            });
+            if (particles.length > 0) requestAnimationFrame(animateFireworks);
+            else fireworksCanvas.style.display = 'none'; // Hide canvas when done
+        }
+        animateFireworks();
     }
 </script>
 </body>
