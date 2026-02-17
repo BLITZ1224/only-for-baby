@@ -3,239 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>My Heart's Director: A Story for My Queen ❤️</title>
+    <title>For My Only Queen ❤️</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Pyidaungsu&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Pyidaungsu:wght@400;700&family=Dancing+Script:wght@700&display=swap');
         
-        body, html { margin: 0; padding: 0; font-family: 'Pyidaungsu', sans-serif; background: #000; color: white; overflow: hidden; height: 100vh; }
+        body, html { margin: 0; padding: 0; background: #000; color: white; overflow: hidden; height: 100vh; font-family: 'Pyidaungsu', sans-serif; }
 
-        /* Video Background */
-        #video-bg { position: fixed; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; z-index: -1; transform: translateX(-50%) translateY(-50%); background-size: cover; }
-        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: -1; }
+        /* Animated Gradient Background (Video အစား သုံးတာ) */
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at center, #2e0000 0%, #000 100%); }
 
         /* Lock Screen */
-        #lock-screen { position: fixed; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100; transition: opacity 1.5s ease-in-out; }
-        .lock-container { text-align: center; background: rgba(0,0,0,0.7); padding: 30px; border-radius: 15px; box-shadow: 0 0 40px rgba(255, 77, 77, 0.2); animation: scaleIn 1s forwards; }
-        .lock-input { padding: 15px; border-radius: 10px; border: 2px solid #ff4d4d; background: transparent; color: #fff; text-align: center; margin-bottom: 20px; width: 250px; font-size: 1.2rem; outline: none; transition: 0.3s; }
-        .lock-input:focus { box-shadow: 0 0 25px rgba(255, 77, 77, 0.6); }
-        .unlock-btn { padding: 12px 40px; background: #ff4d4d; border: none; border-radius: 50px; color: white; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 20px rgba(255, 77, 77, 0.4); }
-        .unlock-btn:hover { background: #ff3333; transform: translateY(-2px); }
-        #error-msg { color: #ff8888; margin-top: 15px; font-size: 0.95rem; height: 20px; }
-        @keyframes scaleIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        #lock-screen { position: fixed; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 1000; transition: 1.5s cubic-bezier(0.65, 0, 0.35, 1); background: #000; }
+        .lock-box { padding: 40px; text-align: center; border: 1px solid rgba(255, 77, 77, 0.3); border-radius: 30px; background: rgba(15, 0, 0, 0.8); backdrop-filter: blur(10px); box-shadow: 0 0 30px rgba(255, 77, 77, 0.1); }
+        .lock-input { padding: 15px; border-radius: 15px; border: 2px solid #440000; background: transparent; color: white; text-align: center; width: 220px; font-size: 1.3rem; margin-bottom: 20px; outline: none; transition: 0.3s; letter-spacing: 5px; }
+        .lock-input:focus { border-color: #ff4d4d; box-shadow: 0 0 15px #ff4d4d; }
+        .unlock-btn { padding: 12px 50px; background: #ff4d4d; border: none; border-radius: 50px; color: white; font-weight: bold; cursor: pointer; transition: 0.4s; }
+        .unlock-btn:hover { letter-spacing: 2px; box-shadow: 0 0 30px #ff4d4d; }
 
-        /* Choice Screen */
-        #choice-screen { display: none; position: absolute; width: 100%; height: 100%; flex-direction: column; justify-content: center; align-items: center; z-index: 20; text-align: center; opacity: 0; transition: opacity 1s ease-in-out; }
-        .choice-btn { padding: 18px 45px; border: 1px solid #ff4d4d; background: rgba(255, 77, 77, 0.1); color: white; cursor: pointer; font-size: 1.1rem; border-radius: 50px; margin: 15px; transition: 0.4s; box-shadow: 0 0 20px rgba(255, 77, 77, 0.2); }
-        .choice-btn:hover { background: #ff4d4d; box-shadow: 0 0 40px #ff4d4d; transform: translateY(-3px); }
-
-        /* Animated Photo Gallery */
-        #gallery-mode { display: none; width: 100%; height: 100vh; align-items: center; justify-content: center; position: relative; opacity: 0; transition: opacity 1s ease-in-out; }
-        .photo-frame { position: absolute; width: 80%; max-width: 380px; height: 500px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; box-shadow: 0 25px 60px rgba(0,0,0,0.8); opacity: 0; transform: scale(0.7) rotateY(45deg); transition: all 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55); cursor: pointer; }
-        .photo-frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); }
-        .photo-frame.active { opacity: 1; transform: scale(1) rotateY(0deg); z-index: 10; }
-        .photo-frame.leaving { opacity: 0; transform: scale(0.6) rotateY(-45deg) translateX(-300px); }
-        .frame-caption { color: #eee; text-align: center; font-weight: bold; margin-top: 15px; font-size: 1.1rem; text-shadow: 0 0 5px rgba(0,0,0,0.7); }
-
-        /* Text Mode & Grand Finale */
-        #text-mode { display: none; width: 90%; max-width: 600px; padding: 40px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 0, 0, 0.95); border: 2px solid #500; border-radius: 20px; text-align: center; z-index: 30; box-shadow: 0 0 60px rgba(255, 0, 0, 0.2); }
-        #typewriter { font-size: 1.1rem; line-height: 2; color: #ffebeb; text-align: justify; }
+        /* Story Experience */
+        #main-ui { display: none; opacity: 0; transition: 2s; height: 100vh; width: 100%; position: relative; z-index: 10; }
         
-        .magic-box { font-size: 90px; cursor: pointer; animation: heartbeat 1.5s infinite; transition: transform 0.2s; }
-        .magic-box:active { transform: scale(0.9); }
-        
-        #final-reveal { display: none; margin-top: 25px; animation: zoomIn 1s forwards; }
-        .reveal-items { font-size: 100px; text-shadow: 0 0 15px gold; }
-        @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-        @keyframes zoomIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        /* High-End Photo Slider */
+        .slider-container { height: 65vh; display: flex; align-items: center; justify-content: center; perspective: 1200px; padding-top: 20px; }
+        .photo-card { position: absolute; width: 260px; height: 360px; border-radius: 20px; overflow: hidden; border: 4px solid #fff; box-shadow: 0 20px 50px rgba(0,0,0,0.9); transition: 1.2s cubic-bezier(0.2, 0.8, 0.2, 1); transform: rotateY(90deg) translateZ(500px); opacity: 0; }
+        .photo-card img { width: 100%; height: 100%; object-fit: cover; }
+        .photo-card.active { transform: rotateY(0deg) translateZ(0); opacity: 1; z-index: 100; }
+        .photo-card.prev { transform: rotateY(-30deg) translateZ(-200px) translateX(-150px); opacity: 0.5; z-index: 50; }
+        .photo-card.next { transform: rotateY(30deg) translateZ(-200px) translateX(150px); opacity: 0.5; z-index: 50; }
 
-        /* Particle Effects */
-        .particle { position: fixed; pointer-events: none; z-index: 50; animation: floatUp linear forwards; }
-        @keyframes floatUp { from { transform: translateY(100vh) scale(0); opacity: 1; } to { transform: translateY(-10vh) scale(1.5); opacity: 0; } }
-        
-        /* Fireworks Canvas */
-        #fireworks-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 60; pointer-events: none; }
+        /* Captions */
+        .caption-area { text-align: center; height: 35vh; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); padding: 20px; box-sizing: border-box; }
+        #text-content { font-size: 1rem; line-height: 1.8; color: #ffcccc; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+
+        /* Grand Finale */
+        #final-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: 1s; }
+        .gift-box { font-size: 100px; cursor: pointer; animation: bounce 1.5s infinite; filter: drop-shadow(0 0 20px #ff4d4d); }
+        @keyframes bounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+
+        /* Floating Items */
+        .heart { position: fixed; pointer-events: none; z-index: 5; animation: fall linear forwards; }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
     </style>
 </head>
 <body>
 
-<video autoplay muted loop id="video-bg">
-    <source src="videos/bg.mp4" type="video/mp4">
-    </video>
-<div id="overlay"></div>
-
+<canvas id="bg-canvas"></canvas>
 <audio id="bgMusic" loop><source src="music.mp3.mp3" type="audio/mpeg"></audio>
-<canvas id="fireworks-canvas"></canvas>
 
 <div id="lock-screen">
-    <div class="lock-container">
-        <div style="font-size: 60px; margin-bottom: 20px;">🎬</div>
-        <h2 style="color: #ff4d4d; font-weight: 300;">Enter the Secret Code to Start Our Story</h2>
-        <input type="password" id="passInput" class="lock-input" placeholder="မင်းရဲ့ မွေးနေ့ / နှစ်ပတ်လည်..." maxlength="8">
+    <div class="lock-box">
+        <h1 style="font-family: 'Dancing Script', cursive; color: #ff4d4d; font-size: 2.5rem; margin-bottom: 10px;">Private Room</h1>
+        <p style="font-size: 0.8rem; opacity: 0.6; margin-bottom: 25px;">Enter our special date to enter</p>
+        <input type="password" id="passInput" class="lock-input" placeholder="••••••••" maxlength="8">
         <br>
-        <button class="unlock-btn" onclick="checkLock()">Unlock My Love Story</button>
-        <div id="error-msg"></div>
+        <button class="unlock-btn" onclick="checkUnlock()">UNLOCK</button>
+        <p id="error" style="color: #ff6666; font-size: 0.8rem; margin-top: 15px; height: 20px;"></p>
     </div>
 </div>
 
-<div id="choice-screen">
-    <h1 style="color: #ff4d4d; font-size: 2.5rem; text-shadow: 0 0 20px rgba(255,0,0,0.7);">WELCOME TO OUR WORLD ❤️</h1>
-    <p style="opacity: 0.7; font-size: 1rem;">Choose your journey, my love.</p>
-    <div style="margin-top: 40px;">
-        <button class="choice-btn" onclick="startFeature('gallery')">✨ အမှတ်တရ ဇာတ်လမ်း ✨</button>
-        <button class="choice-btn" onclick="startFeature('text')">💌 ရင်ဖွင့်စကားများ 💌</button>
+<div id="main-ui">
+    <div class="slider-container" onclick="nextPhoto()">
+        <div class="photo-card active"><img src="images/1.jpg"></div>
+        <div class="photo-card"><img src="images/2.jpg"></div>
+        <div class="photo-card"><img src="images/3.jpg"></div>
+        <div class="photo-card"><img src="images/4.jpg"></div>
+        <div class="photo-card"><img src="images/5.jpg"></div>
+        <div class="photo-card"><img src="images/6.jpg"></div>
+    </div>
+    
+    <div class="caption-area">
+        <div id="text-content"></div>
     </div>
 </div>
 
-<div id="gallery-mode" onclick="nextPhoto()">
-    <div class="photo-frame active" id="p1"><img src="images/1.jpg"><div class="frame-caption">ကိုယ့်ရဲ့ အချစ်ဦး ❤️</div></div>
-    <div class="photo-frame" id="p2"><img src="images/2.jpg"><div class="frame-caption">တစ်သက်လုံး လက်တွဲမယ့်သူ 🌹</div></div>
-    <div class="photo-frame" id="p3"><img src="images/3.jpg"><div class="frame-caption">ကိုယ့်ရဲ့ ကမ္ဘာ ✨</div></div>
-    <div class="photo-frame" id="p4"><img src="images/4.jpg"><div class="frame-caption">မင်းအပြုံးတွေက ကိုယ့်ခွန်အား 💖</div></div>
-    <div class="photo-frame" id="p5"><img src="images/5.jpg"><div class="frame-caption">နေ့တိုင်း ထပ်ချစ်နေဦးမယ် 🎞️</div></div>
-    <div class="photo-frame" id="p6"><img src="images/6.jpg"><div class="frame-caption">ထာဝရ အတူတူ 💍</div></div>
-</div>
-
-<div id="text-mode">
-    <div id="typewriter"></div>
-    <div id="gift-area" style="display: none; margin-top: 30px;">
-        <div class="magic-box" onclick="revealGrandFinale()">🎁</div>
-        <div id="final-reveal">
-            <div class="reveal-items">💐🧸🌹</div>
-            <p style="color: gold; font-size: 1.5rem; margin-top: 15px; text-shadow: 0 0 10px rgba(255,255,0,0.5);">"မင်းကို အသက်ထက်ပိုပြီး မြတ်နိုးပါတယ် မိန်းမ..."</p>
-        </div>
+<div id="final-overlay">
+    <div class="gift-box" onclick="showSurprise()">🎁</div>
+    <div id="surprise-result" style="display:none; text-align:center; animation: zoomIn 0.8s forwards;">
+        <div style="font-size: 100px;">💐🧸🌹</div>
+        <h2 style="font-family: 'Dancing Script', cursive; font-size: 3rem; color: gold; margin: 10px 0;">Happy Forever</h2>
+        <p style="font-size: 1.2rem;">မင်းကို အသက်ထက်ပိုချစ်တယ် မိန်းမ ❤️</p>
     </div>
 </div>
 
 <script>
     const music = document.getElementById('bgMusic');
-    const CORRECT_PASSWORD = "24122005"; // မင်းမွေးနေ့ ဒါမှမဟုတ် နှစ်ပတ်လည်
-    let currentPhotoIndex = 0;
-    const photoFrames = document.querySelectorAll('.photo-frame');
+    const cards = document.querySelectorAll('.photo-card');
+    let idx = 0;
 
-    // Particle Effect
-    function createParticle() {
-        const p = document.createElement('div');
-        p.className = 'particle';
-        const symbols = ['❤️', '💖', '✨', '🌟', '🌹', '🌸'];
-        p.innerHTML = symbols[Math.floor(Math.random()*symbols.length)];
-        p.style.left = Math.random() * 100 + 'vw';
-        p.style.top = '100vh';
-        p.style.fontSize = Math.random() * 20 + 15 + 'px';
-        p.style.animationDuration = Math.random() * 4 + 5 + 's';
-        p.style.opacity = Math.random() * 0.7 + 0.3;
-        document.body.appendChild(p);
-        setTimeout(() => p.remove(), 10000);
+    // Background Bokeh Effect
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    let orbs = [];
+
+    class Orb {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.r = Math.random() * 50 + 20;
+            this.s = Math.random() * 0.5 + 0.2;
+            this.o = Math.random() * 0.3;
+        }
+        draw() {
+            ctx.beginPath();
+            let g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r);
+            g.addColorStop(0, `rgba(255, 50, 50, ${this.o})`);
+            g.addColorStop(1, `rgba(0, 0, 0, 0)`);
+            ctx.fillStyle = g;
+            ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+            ctx.fill();
+            this.y -= this.s;
+            if (this.y + this.r < 0) this.y = canvas.height + this.r;
+        }
     }
-    setInterval(createParticle, 300);
+    for(let i=0; i<25; i++) orbs.push(new Orb());
+    function anim() { ctx.clearRect(0,0,canvas.width,canvas.height); orbs.forEach(o => o.draw()); requestAnimationFrame(anim); }
+    anim();
 
-    function checkLock() {
-        const input = document.getElementById('passInput').value;
-        const error = document.getElementById('error-msg');
-        
-        if(input === CORRECT_PASSWORD) {
+    function checkUnlock() {
+        const p = document.getElementById('passInput').value;
+        if(p === "24122005") {
+            document.getElementById('lock-screen').style.transform = 'scale(2)';
             document.getElementById('lock-screen').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('lock-screen').style.display = 'none';
-                document.getElementById('choice-screen').style.display = 'flex';
-                setTimeout(() => document.getElementById('choice-screen').style.opacity = '1', 100);
-                music.play().catch(e => console.log("Audio play failed:", e));
-            }, 1500);
+                document.getElementById('main-ui').style.display = 'block';
+                setTimeout(() => document.getElementById('main-ui').style.opacity = '1', 100);
+                music.play();
+                startStory();
+            }, 1000);
         } else {
-            error.innerHTML = "ကိုကို့ရဲ့ အမှတ်တရရက်စွဲကို ပြန်စဉ်းစားပါဦး မိန်းမရဲ့... 🥺";
-            document.getElementById('passInput').value = "";
+            document.getElementById('error').innerText = "ကိုကို့မွေးနေ့ကို မှားနေတယ်လေ မိန်းမရဲ့... 🥺";
         }
     }
 
-    function startFeature(mode) {
-        document.getElementById('choice-screen').style.opacity = '0';
-        setTimeout(() => {
-            document.getElementById('choice-screen').style.display = 'none';
-            if(mode === 'gallery') {
-                document.getElementById('gallery-mode').style.display = 'flex';
-                setTimeout(() => photoFrames[currentPhotoIndex].classList.add('active'), 500);
-                setTimeout(() => document.getElementById('gallery-mode').style.opacity = '1', 100);
-            } else {
-                document.getElementById('text-mode').style.display = 'block';
-                startTypewriter();
-            }
-        }, 1000);
-    }
-
     function nextPhoto() {
-        photoFrames[currentPhotoIndex].classList.remove('active');
-        photoFrames[currentPhotoIndex].classList.add('leaving');
-        
-        setTimeout(() => {
-            photoFrames[currentPhotoIndex].classList.remove('leaving'); // Reset for next cycle
-            currentPhotoIndex = (currentPhotoIndex + 1) % photoFrames.length;
-            photoFrames[currentPhotoIndex].classList.add('active');
-        }, 800); // Should match CSS transition time
+        cards[idx].classList.remove('active');
+        idx = (idx + 1) % cards.length;
+        cards[idx].classList.add('active');
+        // Simple 3D stack logic
+        cards.forEach((c, i) => {
+            if(i !== idx) c.classList.remove('active');
+        });
     }
 
-    function startTypewriter() {
-        const fullMessage = `ချစ်ရပါသော မိန်းမ... ❤️\n\nဒီနေ့ အလုပ်မှာ စိတ်ညစ်ခဲ့ရသမျှတွေ ဒီ Website လေးထဲမှာ ထားခဲ့လိုက်ပါတော့နော်။ ကိုယ်တို့နှစ်ယောက်ရဲ့ ဇာတ်လမ်းလေးက အမြဲတမ်း ပျော်ရွှင်စရာတွေနဲ့ ပြည့်နေရမှာပါ။ \n\nမင်းက ကိုယ့်ဘဝရဲ့ ဒါရိုက်တာလိုပါပဲ။ ကိုယ့်ရဲ့ နေ့ရက်တိုင်းကို အဓိပ္ပာယ်ရှိအောင် ဖန်တီးပေးခဲ့သူပါ။ မင်းကို ပျော်အောင်ထားဖို့ ကိုယ်တတ်နိုင်သမျှ အရာအားလုံးကို လုပ်ပေးသွားမှာပါ။ \n\nဒီ Website လေးကို မင်းအတွက် ကိုယ်ကိုယ်တိုင် ရေးထားတာပါ။ လက်ဆောင်နောက်ကျတာကို ခွင့်လွှတ်ပေးပါနော်။ မင်းကို အသက်ထက်ပိုချစ်ပါတယ်...\n\nဒီမှာ... မင်းအတွက် နောက်ဆုံး Surprise...`;
+    function startStory() {
+        const msg = `ချစ်ရပါသော မိန်းမ... ❤️\n\nဒီနေ့ အလုပ်မှာ စိတ်ညစ်ခဲ့သမျှတွေကို ဒီကမ္ဘာငယ်လေးထဲမှာ ထားခဲ့လိုက်ပါတော့။ \n\nမင်းက ကိုယ့်ဘဝရဲ့ တန်ဖိုးအရှိဆုံး လက်ဆောင်ပါ။ မင်းရဲ့ အပြုံးလေးတွေက ကိုယ့်ကို ရှင်သန်စေတာမို့လို့ ဘယ်တော့မှ အပြုံးမပျက်ပါနဲ့နော်။ \n\nလက်ဆောင်နောက်ကျသွားတာကို စိတ်မဆိုးပါနဲ့ဦး။ အခု ပုံလေးတွေကို နှိပ်ကြည့်ပြီးရင် လက်ဆောင်ဗူးလေးကို ဖွင့်ကြည့်ပါဦး...`;
         let i = 0;
-        const typewriterDiv = document.getElementById('typewriter');
         function type() {
-            if (i < fullMessage.length) {
-                typewriterDiv.innerHTML += fullMessage.charAt(i) === '\n' ? '<br>' : fullMessage.charAt(i);
-                i++; setTimeout(type, 50); // Typing speed
-            } else { document.getElementById('gift-area').style.display = 'block'; }
+            if(i < msg.length) {
+                document.getElementById('text-content').innerHTML += msg.charAt(i) === '\n' ? '<br>' : msg.charAt(i);
+                i++; setTimeout(type, 50);
+            } else {
+                setTimeout(() => {
+                    document.getElementById('final-overlay').style.display = 'flex';
+                    setTimeout(() => document.getElementById('final-overlay').style.opacity = '1', 100);
+                }, 4000);
+            }
         }
         type();
     }
 
-    function revealGrandFinale() {
-        document.querySelector('.magic-box').style.display = 'none';
-        document.getElementById('final-reveal').style.display = 'block';
-        initFireworks(); // Start fireworks!
+    function showSurprise() {
+        document.querySelector('.gift-box').style.display = 'none';
+        document.getElementById('surprise-result').style.display = 'block';
+        setInterval(spawnHeart, 200);
     }
 
-    // Fireworks Logic (using canvas)
-    const fireworksCanvas = document.getElementById('fireworks-canvas');
-    const f_ctx = fireworksCanvas.getContext('2d');
-    let particles = [];
-
-    function initFireworks() {
-        fireworksCanvas.width = window.innerWidth;
-        fireworksCanvas.height = window.innerHeight;
-        
-        function createFirework(x, y) {
-            for (let i = 0; i < 100; i++) {
-                particles.push({
-                    x: x, y: y,
-                    vx: (Math.random() - 0.5) * 15,
-                    vy: (Math.random() - 0.5) * 15,
-                    alpha: 1,
-                    color: `hsl(${Math.random() * 360}, 100%, 70%)`,
-                    gravity: 0.3
-                });
-            }
-        }
-
-        // Spawn a few fireworks for grand finale
-        createFirework(fireworksCanvas.width / 2, fireworksCanvas.height / 2);
-        setTimeout(() => createFirework(Math.random() * fireworksCanvas.width, Math.random() * fireworksCanvas.height), 500);
-        setTimeout(() => createFirework(Math.random() * fireworksCanvas.width, Math.random() * fireworksCanvas.height), 1000);
-
-        function animateFireworks() {
-            f_ctx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
-            particles.forEach((p, i) => {
-                p.x += p.vx;
-                p.y += p.vy;
-                p.vy += p.gravity; // Apply gravity
-                p.alpha -= 0.015;
-                f_ctx.globalAlpha = p.alpha;
-                f_ctx.fillStyle = p.color;
-                f_ctx.beginPath();
-                f_ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
-                f_ctx.fill();
-                if (p.alpha <= 0) particles.splice(i, 1);
-            });
-            if (particles.length > 0) requestAnimationFrame(animateFireworks);
-            else fireworksCanvas.style.display = 'none'; // Hide canvas when done
-        }
-        animateFireworks();
+    function spawnHeart() {
+        const h = document.createElement('div');
+        h.className = 'heart';
+        h.innerHTML = ['❤️','💖','🌹','✨'][Math.floor(Math.random()*4)];
+        h.style.left = Math.random() * 100 + 'vw';
+        h.style.top = '-5vh';
+        h.style.fontSize = Math.random() * 20 + 20 + 'px';
+        h.style.animationDuration = Math.random() * 2 + 3 + 's';
+        document.body.appendChild(h);
+        setTimeout(() => h.remove(), 5000);
     }
 </script>
 </body>
