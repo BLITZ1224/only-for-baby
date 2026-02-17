@@ -6,66 +6,66 @@
     <title>Only for Baby ❤️</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pyidaungsu&display=swap');
-        body, html { margin: 0; padding: 0; font-family: 'Pyidaungsu', sans-serif; overflow: hidden; background: #000; color: white; }
         
-        #choice-screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: radial-gradient(circle, #400000 0%, #000 100%); z-index: 10; text-align: center; }
-        .choice-btn { padding: 15px 35px; border: 2px solid #ff4d4d; background: transparent; color: white; cursor: pointer; font-size: 1.1rem; border-radius: 50px; transition: 0.3s; margin: 15px; box-shadow: 0 0 15px rgba(255,77,77,0.4); }
-        .choice-btn:hover { background: #ff4d4d; box-shadow: 0 0 40px #ff4d4d; transform: scale(1.1); }
+        body, html { margin: 0; padding: 0; font-family: 'Pyidaungsu', sans-serif; background: #0a0000; color: white; overflow: hidden; height: 100vh; }
 
-        /* Cinematic Photo Slideshow */
-        #photo-slideshow { display: none; width: 100%; height: 100vh; position: relative; overflow: hidden; }
-        .slide { position: absolute; width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity 2s ease-in-out; }
-        .slide.active { opacity: 1; }
+        /* Choice Screen */
+        #choice-screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: radial-gradient(circle, #300000 0%, #000 100%); z-index: 20; text-align: center; }
+        .choice-btn { padding: 15px 40px; border: 1px solid #ff4d4d; background: rgba(255, 77, 77, 0.1); color: white; cursor: pointer; font-size: 1.1rem; border-radius: 5px; transition: 0.4s; margin: 15px; letter-spacing: 1px; }
+        .choice-btn:hover { background: #ff4d4d; box-shadow: 0 0 30px #ff4d4d; transform: translateY(-3px); }
 
-        /* Text Mode & Box */
-        #text-mode { display: none; width: 90%; max-width: 600px; padding: 30px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(15, 0, 0, 0.95); border: 2px solid #ff4d4d; border-radius: 20px; text-align: center; z-index: 5; box-shadow: 0 0 30px #ff4d4d; }
+        /* Photo Gallery Mode (Professional Polaroid Style) */
+        #gallery-mode { display: none; width: 100%; height: 100vh; position: relative; z-index: 5; }
+        .photo-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 400px; padding: 15px 15px 60px 15px; background: white; box-shadow: 0 10px 30px rgba(0,0,0,0.5); opacity: 0; transition: all 1s ease; border-radius: 2px; }
+        .photo-container img { width: 100%; height: auto; display: block; filter: sepia(20%); }
+        .photo-container.active { opacity: 1; transform: translate(-50%, -55%) rotate(0deg); }
+        .photo-caption { color: #333; position: absolute; bottom: 15px; width: 100%; text-align: center; font-weight: bold; font-style: italic; font-size: 1.1rem; left: 0; }
+
+        /* Text & Gift Mode */
+        #text-mode { display: none; width: 85%; max-width: 550px; padding: 40px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 0, 0, 0.85); border: 1px solid #330000; border-radius: 15px; text-align: center; z-index: 10; box-shadow: 0 0 50px rgba(255,0,0,0.1); }
         
-        #gift-section { display: none; margin-top: 20px; }
-        .magic-box { width: 120px; height: 120px; background: #d40000; margin: 0 auto; border-radius: 15px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 60px; transition: 0.5s; box-shadow: 0 0 25px #ff0000; animation: shake 0.6s infinite; }
-        @keyframes shake { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1) rotate(5deg); } }
-        .magic-box.open { transform: scale(0); opacity: 0; }
+        /* Magic Box & Surprise */
+        .magic-box { width: 100px; height: 100px; background: #b30000; margin: 30px auto 0; border-radius: 10px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 50px; transition: 0.5s; box-shadow: 0 0 20px #ff0000; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        
+        #final-assets { display: none; margin-top: 20px; animation: popUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes popUp { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        #final-surprise { display: none; }
-        .gift-item { font-size: 110px; animation: pop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
-
-        /* Hearts Background */
-        .heart { position: absolute; color: #ff4d4d; pointer-events: none; z-index: 1; animation: float linear infinite; }
-        @keyframes float { from { transform: translateY(110vh); } to { transform: translateY(-10vh); } }
-
-        /* Firework Canvas */
-        #fireworks { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 6; }
+        /* Background Effects */
+        .sparkle { position: absolute; background: gold; border-radius: 50%; pointer-events: none; opacity: 0.5; animation: twinkle linear infinite; }
+        @keyframes twinkle { 0% { opacity: 0; transform: translateY(0); } 50% { opacity: 1; } 100% { opacity: 0; transform: translateY(-100px); } }
     </style>
 </head>
 <body>
 
-<canvas id="fireworks"></canvas>
+<canvas id="fireworks" style="position:fixed; top:0; left:0; pointer-events:none; z-index:15;"></canvas>
 <audio id="bgMusic" loop><source src="music.mp3.mp3" type="audio/mpeg"></audio>
 
 <div id="choice-screen">
-    <h1 style="font-size: 2.8rem; color: #ff4d4d; text-shadow: 0 0 15px #ff4d4d;">Only for Baby ❤️</h1>
-    <div style="margin-top: 20px;">
-        <button class="choice-btn" onclick="startMode('photos')">အမှတ်တရပုံရိပ်များ</button>
-        <button class="choice-btn" onclick="startMode('text')">ကိုယ့်ရင်ထဲက စကားများ</button>
+    <h1 style="font-size: 2.2rem; color: #ff4d4d; font-weight: 300;">ONLY FOR BABY ❤️</h1>
+    <p style="opacity: 0.6; font-size: 0.9rem;">A digital token of my love</p>
+    <div style="margin-top: 25px;">
+        <button class="choice-btn" onclick="start('gallery')">အမှတ်တရ ပြခန်း</button>
+        <button class="choice-btn" onclick="start('text')">ရင်ဖွင့်စကားများ</button>
     </div>
 </div>
 
-<div id="photo-slideshow">
-    <img src="images/1.jpg" class="slide active">
-    <img src="images/2.jpg" class="slide">
-    <img src="images/3.jpg" class="slide">
-    <img src="images/4.jpg" class="slide">
-    <img src="images/5.jpg" class="slide">
-    <img src="images/6.jpg" class="slide">
+<div id="gallery-mode">
+    <div class="photo-container active" id="p1"><img src="images/1.jpg"><div class="photo-caption">အလှပဆုံး အပြုံး ❤️</div></div>
+    <div class="photo-container" id="p2"><img src="images/2.jpg"><div class="photo-caption">မြတ်နိုးရသူလေး 🌹</div></div>
+    <div class="photo-container" id="p3"><img src="images/3.jpg"><div class="photo-caption">ကိုယ့်ရဲ့ ကမ္ဘာငယ် 🌍</div></div>
+    <div class="photo-container" id="p4"><img src="images/4.jpg"><div class="photo-caption">ချစ်ခြင်းရဲ့ အစ... ✨</div></div>
+    <div class="photo-container" id="p5"><img src="images/5.jpg"><div class="photo-caption">အဖိုးတန်တဲ့ အချိန်များ 🕰️</div></div>
+    <div class="photo-container" id="p6"><img src="images/6.jpg"><div class="photo-caption">ထာဝရ လက်တွဲဖော် 💍</div></div>
 </div>
 
 <div id="text-mode">
-    <div id="typewriter" style="font-size: 1.1rem; line-height: 2; color: #ffebeb;"></div>
-    <div id="gift-section">
-        <div class="magic-box" id="boxBtn" onclick="revealGift()">🎁</div>
-        <div id="final-surprise">
-            <div class="gift-item">💐🧸🌹</div>
-            <p style="font-size: 1.3rem; color: gold; margin-top: 10px;">Happy Belated V-Day, Baby! ❤️</p>
+    <div id="typewriter" style="font-size: 1rem; line-height: 2; color: #f0f0f0; text-align: left;"></div>
+    <div id="gift-area" style="display: none;">
+        <div class="magic-box" id="box" onclick="openSurprise()">🎁</div>
+        <div id="final-assets">
+            <div style="font-size: 80px;">💐🧸🌹</div>
+            <p style="color: #ff4d4d; font-size: 1.2rem;">"မင်းကို တစ်သက်လုံး ချစ်သွားမှာပါ"</p>
         </div>
     </div>
 </div>
@@ -73,98 +73,83 @@
 <script>
     const music = document.getElementById('bgMusic');
 
-    // Heart Particle System
-    function spawnHeart() {
-        const h = document.createElement('div');
-        h.className = 'heart';
-        h.innerHTML = ['❤️', '💖', '🌹', '🌸'][Math.floor(Math.random()*4)];
-        h.style.left = Math.random() * 100 + 'vw';
-        h.style.fontSize = Math.random() * 20 + 15 + 'px';
-        h.style.animationDuration = Math.random() * 3 + 4 + 's';
-        h.style.opacity = Math.random();
-        document.body.appendChild(h);
-        setTimeout(() => h.remove(), 7000);
+    // Create Sparkles
+    function createSparkle() {
+        const s = document.createElement('div');
+        s.className = 'sparkle';
+        const size = Math.random() * 3 + 1 + 'px';
+        s.style.width = size; s.style.height = size;
+        s.style.left = Math.random() * 100 + 'vw';
+        s.style.top = Math.random() * 100 + 'vh';
+        s.style.animationDuration = Math.random() * 2 + 1 + 's';
+        document.body.appendChild(s);
+        setTimeout(() => s.remove(), 3000);
     }
-    setInterval(spawnHeart, 400);
+    setInterval(createSparkle, 150);
 
-    function startMode(mode) {
+    function start(mode) {
         music.play();
         document.getElementById('choice-screen').style.opacity = '0';
         setTimeout(() => {
             document.getElementById('choice-screen').style.display = 'none';
-            if(mode === 'photos') {
-                document.getElementById('photo-slideshow').style.display = 'block';
-                startSlideshow();
+            if(mode === 'gallery') {
+                document.getElementById('gallery-mode').style.display = 'block';
+                runGallery();
             } else {
                 document.getElementById('text-mode').style.display = 'block';
-                startText();
+                runText();
             }
         }, 800);
     }
 
-    function startSlideshow() {
-        const slides = document.querySelectorAll('.slide');
-        let current = 0;
+    function runGallery() {
+        const photos = document.querySelectorAll('.photo-container');
+        let idx = 0;
         setInterval(() => {
-            slides[current].classList.remove('active');
-            current = (current + 1) % slides.length;
-            slides[current].classList.add('active');
-        }, 4500); // ၄ စက္ကန့်ခွဲတိုင်း တစ်ပုံပြောင်းမယ်
+            photos[idx].classList.remove('active');
+            idx = (idx + 1) % photos.length;
+            photos[idx].classList.add('active');
+        }, 4000);
     }
 
-    function startText() {
-        const msg = `ချစ်ရပါသော မိန်းမ... ❤️\n\nဒီနေ့ အလုပ်မှာ သူများတွေစတာခံလိုက်ရလို့ စိတ်ညစ်နေမှာ ကိုယ်သိပါတယ်။ ကိုယ် Code တွေ ရေးနေတာနဲ့ လက်ဆောင်ပေးတာ နောက်ကျသွားတာကို ခွင့်လွှတ်ပါနော်။ \n\nမင်းက ကိုယ့်ဘဝရဲ့ အလှပဆုံး ပန်းကလေးပါ။ ဘယ်သူတွေ ဘာပြောပြော ကိုယ့်အတွက်တော့ မင်းက အမြဲတမ်း အထူးခြားဆုံးနဲ့ အချစ်ရဆုံးသော ဇနီးသည်ပါ။\n\nဒီမှာ... မင်းအတွက် တစ်ခုခု ထည့်ထားပေးတယ်... နှိပ်ကြည့်လိုက်ဦး...`;
+    function runText() {
+        const msg = `ချစ်ရပါသော မိန်းမ... ❤️\n\nဒီနေ့ အလုပ်မှာ စိတ်အနှောင့်အယှက်ဖြစ်ခဲ့ရတာတွေအတွက် ကိုယ်တောင်းပန်ပါတယ်နော်။ မင်းက ကိုယ့်အတွက် ဘယ်လောက်အဖိုးတန်တယ်ဆိုတာကို သိစေချင်လို့ ဒီ Website လေးကို သီးသန့်ရေးပေးထားတာပါ။ \n\nဘယ်သူတွေ ဘာပြောပြော ကိုယ့်မျက်လုံးထဲမှာတော့ မင်းက အမြဲတမ်း အလှဆုံးနဲ့ အပြည့်စုံဆုံးပါပဲ။ မင်းရဲ့ အပြုံးလေးတွေက ကိုယ့်ဘဝရဲ့ အလင်းရောင်တွေမို့လို့ အမြဲတမ်း ပြုံးနေပေးပါနော်။\n\nဒီမှာ... မင်းအတွက် လက်ဆောင်လေး ထည့်ထားတယ်...`;
         let i = 0;
+        const target = document.getElementById('typewriter');
         function type() {
             if (i < msg.length) {
-                document.getElementById("typewriter").innerHTML += msg.charAt(i) === '\n' ? '<br>' : msg.charAt(i);
-                i++;
-                setTimeout(type, 65);
+                target.innerHTML += msg.charAt(i) === '\n' ? '<br>' : msg.charAt(i);
+                i++; setTimeout(type, 60);
             } else {
-                document.getElementById('gift-section').style.display = 'block';
+                document.getElementById('gift-area').style.display = 'block';
             }
         }
         type();
     }
 
-    function revealGift() {
-        document.getElementById('boxBtn').classList.add('open');
-        initFireworks();
-        setTimeout(() => {
-            document.getElementById('boxBtn').style.display = 'none';
-            document.getElementById('final-surprise').style.display = 'block';
-        }, 500);
+    function openSurprise() {
+        document.getElementById('box').style.display = 'none';
+        document.getElementById('final-assets').style.display = 'block';
+        fireworks();
     }
 
-    // Fireworks Logic
-    function initFireworks() {
-        const canvas = document.getElementById('fireworks');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        
-        let particles = [];
-        function createParticle() {
-            for(let i=0; i<100; i++) {
-                particles.push({
-                    x: canvas.width/2, y: canvas.height/2,
-                    vx: (Math.random()-0.5)*10, vy: (Math.random()-0.5)*10,
-                    alpha: 1, color: `hsl(${Math.random()*360}, 100%, 50%)`
-                });
-            }
+    function fireworks() {
+        const c = document.getElementById('fireworks');
+        const ctx = c.getContext('2d');
+        c.width = window.innerWidth; c.height = window.innerHeight;
+        let p = [];
+        for(let i=0; i<150; i++) {
+            p.push({ x: c.width/2, y: c.height/2, vx: (Math.random()-0.5)*15, vy: (Math.random()-0.5)*15, a: 1, color: `hsl(${Math.random()*360}, 100%, 60%)` });
         }
-        createParticle();
-        
         function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach((p, i) => {
-                p.x += p.vx; p.y += p.vy; p.alpha -= 0.01;
-                ctx.globalAlpha = p.alpha;
-                ctx.fillStyle = p.color;
-                ctx.beginPath(); ctx.arc(p.x, p.y, 3, 0, Math.PI*2); ctx.fill();
-                if(p.alpha <= 0) particles.splice(i, 1);
+            ctx.clearRect(0,0,c.width,c.height);
+            p.forEach((item, i) => {
+                item.x += item.vx; item.y += item.vy; item.a -= 0.01;
+                ctx.globalAlpha = item.a; ctx.fillStyle = item.color;
+                ctx.beginPath(); ctx.arc(item.x, item.y, 3, 0, Math.PI*2); ctx.fill();
+                if(item.a <= 0) p.splice(i, 1);
             });
-            if(particles.length > 0) requestAnimationFrame(draw);
+            if(p.length > 0) requestAnimationFrame(draw);
         }
         draw();
     }
