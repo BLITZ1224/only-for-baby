@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Only for Baby ❤️</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body, html { margin: 0; padding: 0; font-family: 'Pyidaungsu', sans-serif; overflow: hidden; background: #000; color: white; }
+        #choice-screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: radial-gradient(circle, #300000 0%, #000 100%); z-index: 10; text-align: center; }
+        .choice-btn { padding: 15px 35px; border: 2px solid #ff4d4d; background: transparent; color: white; cursor: pointer; font-size: 1.1rem; border-radius: 50px; transition: 0.3s; margin: 15px; box-shadow: 0 0 10px rgba(255,77,77,0.3); }
+        .choice-btn:hover { background: #ff4d4d; box-shadow: 0 0 30px #ff4d4d; transform: scale(1.05); }
+        #canvas-container { display: none; width: 100%; height: 100vh; }
+        #text-mode { display: none; width: 85%; max-width: 600px; padding: 25px; line-height: 2; font-family: 'Courier New', monospace; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 1px solid #444; background: rgba(0,0,0,0.9); border-radius: 15px; }
+        .flower-icon { font-size: 50px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<audio id="bgMusic" loop>
+    <source src="music.mp3.mp3" type="audio/mpeg">
+</audio>
+
+<div id="choice-screen">
+    <div class="flower-icon">🌹</div>
+    <h1 style="font-size: 2.5rem; color: #ff4d4d; text-shadow: 0 0 10px #ff4d4d;">Only for Baby ❤️</h1>
+    <p>V-Day လက်ဆောင် နောက်ကျသွားလို့ စိတ်မဆိုးပါနဲ့နော် မိန်းမ...</p>
+    <div style="margin-top: 20px;">
+        <button class="choice-btn" onclick="triggerEffect('3d')">အမှတ်တရ 3D ကမ္ဘာ</button>
+        <button class="choice-btn" onclick="triggerEffect('text')">ကိုယ့်ရင်ထဲက စကားများ</button>
+    </div>
+</div>
+
+<div id="canvas-container"></div>
+<div id="text-mode"><div id="typewriter"></div></div>
+
+<script>
+    const music = document.getElementById('bgMusic');
+
+    function triggerEffect(mode) {
+        music.play().catch(e => console.log("Audio play started."));
+        document.getElementById('choice-screen').style.transition = "1s";
+        document.getElementById('choice-screen').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('choice-screen').style.display = 'none';
+            if(mode === '3d') {
+                document.getElementById('canvas-container').style.display = 'block';
+                init3D();
+            } else {
+                document.getElementById('text-mode').style.display = 'block';
+                typeWriter();
+            }
+        }, 1000);
+    }
+
+    function init3D() {
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        const loader = new THREE.TextureLoader();
+        const textures = [
+            loader.load('images/1.jpg'),
+            loader.load('images/2.jpg'),
+            loader.load('images/3.jpg'),
+            loader.load('images/4.jpg'),
+            loader.load('images/5.jpg'),
+            loader.load('images/6.jpg')
+        ];
+
+        const materials = textures.map(tex => new THREE.MeshBasicMaterial({ map: tex }));
+        const cube = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3), materials);
+        scene.add(cube);
+        camera.position.z = 6;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            cube.rotation.x += 0.005;
+            cube.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        }
+        animate();
+    }
+
+    const message = `> Hello My Baby... 💖\n> Identity: My Beloved Wife.\n> Status: Loved Forever.\n\nမိန်းမရယ်... အလုပ်မှာ အစခံရလို့ စိတ်မညစ်ပါနဲ့။\nကိုယ့်အတွက်တော့ မင်းက အမြဲတမ်း အကောင်းဆုံးပါ။\nဒီ Website လေးကို မင်းအတွက် ကိုယ်တိုင် Code ရေးထားတာပါ။\nV-Day လက်ဆောင် နောက်ကျသွားတာကို ခွင့်လွှတ်ပေးမယ်လို့ ယုံကြည်ပါတယ်။\nမင်းကို အများကြီး ချစ်တယ်နော်... 🌹❤️\n\n- မင်းရဲ့ ယောင်္ကျား -`;
+
+    let i = 0;
+    function typeWriter() {
+        if (i < message.length) {
+            document.getElementById("typewriter").innerHTML += message.charAt(i) === '\n' ? '<br>' : message.charAt(i);
+            i++;
+            setTimeout(typeWriter, 55);
+        }
+    }
+</script>
+</body>
+</html>
