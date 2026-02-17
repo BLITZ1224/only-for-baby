@@ -3,59 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>The Ultimate Love Surprise ❤️</title>
+    <title>My Queen, My Everything ❤️</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pyidaungsu:wght@400;700&family=Dancing+Script:wght@700&display=swap');
-        body, html { margin: 0; padding: 0; background: #000; color: white; overflow: hidden; height: 100vh; font-family: 'Pyidaungsu', sans-serif; touch-action: manipulation; }
+        
+        body, html { margin: 0; padding: 0; background: #000; color: white; overflow: hidden; height: 100vh; font-family: 'Pyidaungsu', sans-serif; }
 
-        /* Cosmic BG */
-        #bg { position: fixed; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at center, #4b0000 0%, #1a0000 60%, #000 100%); }
+        /* လှပတဲ့ Aurora Background (အနီရောင် အလင်းတန်းများ) */
+        #bg-container {
+            position: fixed; width: 100%; height: 100%; z-index: -1;
+            background: linear-gradient(135deg, #2c0000 0%, #000000 50%, #4a0000 100%);
+            background-size: 400% 400%;
+            animation: auroraMove 15s ease infinite;
+        }
+        @keyframes auroraMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
         /* Lock Screen */
-        #lock-screen { position: fixed; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; background: #000; transition: 1s; }
-        .neon-box { padding: 40px; border: 2px solid #ff4d4d; border-radius: 20px; text-align: center; box-shadow: 0 0 20px #ff4d4d; background: rgba(0,0,0,0.9); }
-        .lock-input { padding: 12px; border-radius: 10px; border: 1px solid #ff4d4d; background: transparent; color: white; text-align: center; font-size: 1.5rem; margin-bottom: 20px; outline: none; width: 200px; }
-        .unlock-btn { padding: 10px 40px; background: #ff4d4d; border: none; border-radius: 50px; color: white; cursor: pointer; font-weight: bold; }
+        #lock-screen { position: fixed; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; background: #000; transition: 1.5s cubic-bezier(0.65, 0, 0.35, 1); }
+        .lock-box { padding: 40px; border: 2px solid #ff4d4d; border-radius: 30px; text-align: center; box-shadow: 0 0 30px rgba(255, 77, 77, 0.5); background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); }
+        .lock-input { padding: 15px; border-radius: 15px; border: 1px solid #ff4d4d; background: transparent; color: white; text-align: center; font-size: 1.6rem; width: 220px; outline: none; margin-bottom: 25px; letter-spacing: 3px; }
+        .unlock-btn { padding: 12px 50px; background: #ff4d4d; border: none; border-radius: 50px; color: white; cursor: pointer; font-weight: bold; font-size: 1.1rem; box-shadow: 0 0 20px #ff4d4d; transition: 0.3s; }
 
-        /* Slider */
-        #main-content { display: none; opacity: 0; transition: 1.5s; height: 100vh; position: relative; z-index: 10; }
-        .slider { height: 55vh; display: flex; align-items: center; justify-content: center; perspective: 1000px; padding-top: 20px; }
-        .card { position: absolute; width: 240px; height: 340px; border-radius: 15px; border: 4px solid white; box-shadow: 0 15px 40px #000; transition: 0.6s; opacity: 0; transform: scale(0.8) rotateY(-20deg); pointer-events: none; }
+        /* Main Experience */
+        #main-content { display: none; opacity: 0; transition: 2s; height: 100vh; position: relative; z-index: 10; }
+        .slider { height: 55vh; display: flex; align-items: center; justify-content: center; perspective: 1500px; padding-top: 30px; }
+        .card { position: absolute; width: 260px; height: 360px; border-radius: 20px; border: 4px solid #fff; box-shadow: 0 20px 60px rgba(0,0,0,0.8); transition: 0.8s cubic-bezier(0.2, 0.8, 0.2, 1.2); opacity: 0; transform: scale(0.5) rotateY(-40deg); }
         .card img { width: 100%; height: 100%; object-fit: cover; }
-        .card.active { opacity: 1; transform: scale(1) rotateY(0); z-index: 100; pointer-events: auto; }
+        .card.active { opacity: 1; transform: scale(1) rotateY(0); z-index: 100; }
 
-        /* Envelope & Box */
-        #interactive-area { position: fixed; bottom: 80px; width: 100%; text-align: center; z-index: 200; }
-        .icon-btn { font-size: 70px; cursor: pointer; animation: pulse 1.5s infinite; filter: drop-shadow(0 0 10px #ff4d4d); display: inline-block; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        /* Interactive Buttons */
+        #ui-layer { position: fixed; bottom: 80px; width: 100%; text-align: center; z-index: 200; }
+        .btn-icon { font-size: 75px; cursor: pointer; animation: heartbeat 1.5s infinite; filter: drop-shadow(0 0 15px #ff4d4d); display: inline-block; }
+        @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
 
         /* Letter Modal */
-        #letter-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); width: 85%; max-height: 70vh; background: #fff; color: #333; padding: 25px; border-radius: 15px; z-index: 8000; overflow-y: auto; transition: 0.4s; box-shadow: 0 0 50px #000; }
+        #letter-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); width: 85%; max-height: 75vh; background: #fff; color: #333; padding: 30px; border-radius: 20px; z-index: 8000; overflow-y: auto; transition: 0.5s; box-shadow: 0 0 50px #000; font-size: 1.05rem; line-height: 1.8; text-align: justify; }
 
-        /* Fireworks & Particles */
-        .fw { position: fixed; width: 5px; height: 5px; border-radius: 50%; pointer-events: none; z-index: 9000; animation: fire 1s forwards; }
+        /* Box & Fireworks */
+        #final-box { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 8500; text-align: center; }
+        .fw { position: fixed; width: 6px; height: 6px; border-radius: 50%; pointer-events: none; z-index: 9000; animation: fire 1.2s forwards; }
         @keyframes fire { 100% { transform: translate(var(--x), var(--y)); opacity: 0; } }
-        .float-item { position: fixed; pointer-events: none; z-index: 1; animation: rise linear forwards; }
+        .float-item { position: fixed; pointer-events: none; z-index: 5; animation: rise linear forwards; }
         @keyframes rise { to { transform: translateY(-110vh) rotate(360deg); opacity: 0; } }
     </style>
 </head>
-<body onclick="createMagicHeart(event)">
+<body onclick="spawnHeart(event)">
 
-<div id="bg"></div>
+<div id="bg-container"></div>
 <audio id="bgMusic" loop preload="auto"><source src="music.mp3.mp3" type="audio/mpeg"></audio>
 
 <div id="lock-screen">
-    <div class="neon-box">
-        <h1 style="font-family: 'Dancing Script', cursive; color: #ff4d4d;">Private Universe</h1>
-        <input type="password" id="passInput" class="lock-input" placeholder="24122005" maxlength="8">
+    <div class="lock-box">
+        <h1 style="font-family: 'Dancing Script', cursive; color: #ff4d4d; font-size: 2.2rem; margin-bottom: 5px;">My Eternal Love</h1>
+        <p style="color: #888; margin-bottom: 25px;">Enter the special date to see your gift</p>
+        <input type="password" id="passInput" class="lock-input" placeholder="••••••••" maxlength="8">
         <br>
-        <button class="unlock-btn" onclick="startUniverse()">UNLOCK LOVE</button>
-        <p id="err" style="color: #ff9999; margin-top: 15px; font-size: 0.8rem;"></p>
+        <button class="unlock-btn" onclick="unlock()">ENTER WORLD</button>
+        <p id="err" style="color: #ff6666; margin-top: 15px; font-size: 0.85rem; height: 20px;"></p>
     </div>
 </div>
 
 <div id="main-content">
-    <div class="slider" onclick="nextCard()">
+    <div class="slider" onclick="nextPhoto()">
         <div class="card active"><img src="images/1.jpg"></div>
         <div class="card"><img src="images/2.jpg"></div>
         <div class="card"><img src="images/3.jpg"></div>
@@ -64,38 +77,40 @@
         <div class="card"><img src="images/6.jpg"></div>
     </div>
 
-    <div id="interactive-area">
-        <div id="env-div">
-            <div class="icon-btn" onclick="openLetter()">✉️</div>
-            <p style="color: gold;">ကိုကို့ဆီက စာလေးဖတ်ကြည့်ပါဦး ❤️</p>
+    <div id="ui-layer">
+        <div id="env-wrap">
+            <div class="btn-icon" onclick="openLetter()">✉️</div>
+            <p style="color: gold; font-weight: bold; text-shadow: 0 0 10px #000;">ကိုကို့ရဲ့ ရင်ဖွင့်စာလေး ဖတ်ကြည့်ပေးပါ ❤️</p>
         </div>
-        <div id="box-div" style="display:none;">
-            <div class="icon-btn" onclick="explodeBox()">🎁</div>
-            <p style="color: #ff4d4d;">နောက်ဆုံးလက်ဆောင်လေး ဖွင့်ကြည့်ဦးနော် 🌹</p>
+        <div id="box-wrap" style="display:none;">
+            <div class="btn-icon" onclick="showSurprise()">🎁</div>
+            <p style="color: #ff4d4d; font-weight: bold; text-shadow: 0 0 10px #000;">နောက်ဆုံး Surprise လေး ဖွင့်ကြည့်ဦးနော် 🌹</p>
         </div>
     </div>
 </div>
 
 <div id="letter-modal">
-    <h3 style="text-align:center; color:#d00;">Dear My Queen... ❤️</h3>
-    <p>ဒီနေ့အထိ ကိုယ့်ဘေးနားမှာ စိတ်ရှည်လက်ရှည်နဲ့ အမြဲရှိပေးခဲ့လို့ ကျေးဇူးအများကြီးတင်ပါတယ်နော်။ မင်းက ကိုယ့်ဘဝရဲ့ အလှပဆုံးသော ကံကြမ္မာတစ်ခုပါ။</p>
-    <p>တစ်ခါတလေ ကိုယ်စကားမှားတာမျိုးရှိရင်လည်း နားလည်ပေးပါဦး။ မင်းကို ပျော်အောင်ထားဖို့က ကိုယ့်ဘဝရဲ့ အဓိကတာဝန်ပါ။</p>
-    <p>အခု စာဖတ်ပြီးရင် ပိတ်လိုက်ပါနော်။ မင်းအတွက် အံ့ဩစရာ လက်ဆောင်တစ်ခု ကျန်သေးတယ်... ချစ်တယ်!</p>
-    <button onclick="closeLetter()" style="width:100%; padding:15px; background:#ff4d4d; color:white; border:none; border-radius:10px; margin-top:20px; font-weight:bold;">ပိတ်မည်</button>
+    <h3 style="text-align:center; color:#d00; font-size: 1.4rem; margin-top: 0;">ချစ်ရပါသော မိန်းမ... ❤️</h3>
+    <p>ပထမဦးဆုံး ကိုယ့်ဘဝထဲကို ရောက်လာပေးတဲ့အတွက် ကျေးဇူးအများကြီးတင်တယ်နော်။ မင်းဟာ ကိုယ့်ဘဝရဲ့ အမှောင်ထုထဲမှာ အလင်းရောင်တစ်ခုလို၊ ကိုယ့်ရဲ့ ပင်ပန်းနွမ်းနယ်မှုတွေကို ပြေပျောက်စေတဲ့ အနားယူရာ နေရာတစ်ခုလိုပါပဲ။</p>
+    <p>တစ်ခါတလေ ကိုယ်စကားမှားတာမျိုး၊ ကိုယ့်ရဲ့ အပြုအမူတွေက မင်းကို စိတ်အနှောင့်အယှက် ဖြစ်စေတာမျိုးရှိခဲ့ရင်လည်း တကယ်ကို တောင်းပန်ပါတယ်နော်။ ကိုယ်တကယ် စိတ်မရည်ရွယ်ပါဘူး။ မင်းကို ပျော်အောင်ထားဖို့က ကိုယ့်ဘဝရဲ့ အရေးကြီးဆုံး ရည်မှန်းချက်ပါ။</p>
+    <p>ဒီ Website လေးကို လုပ်နေတဲ့ တစ်လျှောက်လုံး ကိုယ့်ရင်ထဲမှာ မင်းရဲ့ အပြုံးလေးကိုပဲ မြင်ယောင်နေခဲ့တာ။ မင်းဒီစာကို ဖတ်နေတဲ့ အချိန်မှာလည်း ပျော်ရွှင်နေလိမ့်မယ်လို့ ကိုယ်ယုံကြည်ပါတယ်။</p>
+    <p>မင်းဟာ ကိုယ့်ရဲ့ ဘုရင်မလေးပါ... ကိုယ့်ဘဝရဲ့ နောက်ဆုံးအချိန်အထိ မင်းလက်ကို တင်းတင်းဆုပ်ကိုင်ပြီး အတူတူ လျှောက်လှမ်းသွားချင်ပါတယ်။ ကိုယ့်ကို အမြဲယုံကြည်ပေးလို့ ကျေးဇူးတင်ပါတယ်။</p>
+    <p style="text-align: right; font-weight: bold;">- မင်းကို အရမ်းချစ်တဲ့ ကိုကို -</p>
+    <button onclick="closeLetter()" style="width:100%; padding:15px; background:#ff4d4d; color:white; border:none; border-radius:12px; margin-top:15px; font-weight:bold; cursor:pointer;">စာဖတ်ပြီးပြီ (ပိတ်မည်)</button>
 </div>
 
-<div id="final-reveal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:8500; text-align:center;">
-    <div style="font-size: 100px;">💐🧸🌹</div>
-    <h2 style="font-family: 'Dancing Script', cursive; font-size: 3rem; color: gold;">I Love You Forever</h2>
-    <p style="font-size: 1.2rem;">မင်းဟာ ကိုယ့်ရဲ့ ထာဝရ ဘုရင်မလေးပါ ❤️</p>
+<div id="final-box">
+    <div style="font-size: 110px; filter: drop-shadow(0 0 20px gold);">💐🧸🌹</div>
+    <h2 style="font-family: 'Dancing Script', cursive; font-size: 3.5rem; color: gold; margin-top: 10px;">Happy Forever!</h2>
+    <p style="font-size: 1.3rem; text-shadow: 0 0 10px #000;">မင်းကို အသက်ထက်ပိုချစ်တယ် မိန်းမ ❤️</p>
 </div>
 
 <script>
     const music = document.getElementById('bgMusic');
-    let idx = 0;
     const cards = document.querySelectorAll('.card');
+    let idx = 0;
 
-    function startUniverse() {
+    function unlock() {
         if(document.getElementById('passInput').value === "24122005") {
             document.getElementById('lock-screen').style.opacity = '0';
             setTimeout(() => {
@@ -103,40 +118,40 @@
                 document.getElementById('main-content').style.display = 'block';
                 setTimeout(() => document.getElementById('main-content').style.opacity = '1', 100);
                 music.play().catch(() => {
-                    // Fail-safe for audio auto-play
                     document.body.addEventListener('click', () => music.play(), {once: true});
                 });
-                setInterval(spawnFloaties, 400);
+                setInterval(floaties, 400);
             }, 1000);
         } else { document.getElementById('err').innerText = "Password မှားနေတယ်နော်... 🥺"; }
     }
 
-    function spawnFloaties() {
-        const items = ['❤️', '💖', '💐', '🌹', '✨', '🧸'];
+    function floaties() {
+        const icons = ['❤️', '💖', '💐', '🌹', '✨', '🧸'];
         const el = document.createElement('div');
         el.className = 'float-item';
-        el.innerHTML = items[Math.floor(Math.random()*items.length)];
+        el.innerHTML = icons[Math.floor(Math.random()*icons.length)];
         el.style.left = Math.random() * 100 + 'vw';
         el.style.top = '105vh';
         el.style.fontSize = Math.random() * 20 + 20 + 'px';
-        el.style.animationDuration = Math.random() * 3 + 4 + 's';
+        el.style.animationDuration = Math.random() * 3 + 5 + 's';
         document.body.appendChild(el);
-        setTimeout(() => el.remove(), 7000);
+        setTimeout(() => el.remove(), 7500);
     }
 
-    function createMagicHeart(e) {
+    function spawnHeart(e) {
         const h = document.createElement('div');
         h.innerHTML = '❤️';
         h.style.position = 'fixed';
         h.style.left = e.clientX + 'px';
         h.style.top = e.clientY + 'px';
         h.style.pointerEvents = 'none';
+        h.style.zIndex = '9999';
         h.style.animation = 'rise 1s forwards';
         document.body.appendChild(h);
         setTimeout(() => h.remove(), 1000);
     }
 
-    function nextCard() {
+    function nextPhoto() {
         cards[idx].classList.remove('active');
         idx = (idx + 1) % cards.length;
         cards[idx].classList.add('active');
@@ -147,31 +162,32 @@
     function closeLetter() {
         document.getElementById('letter-modal').style.transform = 'translate(-50%, -50%) scale(0)';
         setTimeout(() => {
-            document.getElementById('env-div').style.display = 'none';
-            document.getElementById('box-div').style.display = 'block';
-        }, 500);
+            document.getElementById('env-wrap').style.display = 'none';
+            document.getElementById('box-wrap').style.display = 'block';
+        }, 600);
     }
 
-    function explodeBox() {
-        document.getElementById('box-div').style.display = 'none';
+    function showSurprise() {
+        document.getElementById('box-wrap').style.display = 'none';
         document.getElementById('main-content').style.opacity = '0.2';
-        document.getElementById('final-reveal').style.display = 'block';
-        for(let i=0; i<30; i++) setTimeout(createFirework, i * 100);
+        document.getElementById('final-box').style.display = 'block';
+        for(let i=0; i<30; i++) setTimeout(firework, i * 150);
     }
 
-    function createFirework() {
+    function firework() {
         const x = Math.random() * window.innerWidth;
         const y = Math.random() * window.innerHeight;
-        const color = `hsl(${Math.random()*360}, 100%, 60%)`;
-        for(let i=0; i<35; i++) {
+        const color = `hsl(${Math.random()*360}, 100%, 65%)`;
+        for(let i=0; i<45; i++) {
             const p = document.createElement('div');
             p.className = 'fw';
             p.style.left = x + 'px'; p.style.top = y + 'px';
             p.style.background = color;
-            p.style.setProperty('--x', (Math.random()-0.5)*300 + 'px');
-            p.style.setProperty('--y', (Math.random()-0.5)*300 + 'px');
+            p.style.boxShadow = `0 0 10px ${color}`;
+            p.style.setProperty('--x', (Math.random()-0.5)*350 + 'px');
+            p.style.setProperty('--y', (Math.random()-0.5)*350 + 'px');
             document.body.appendChild(p);
-            setTimeout(() => p.remove(), 1000);
+            setTimeout(() => p.remove(), 1200);
         }
     }
 </script>
